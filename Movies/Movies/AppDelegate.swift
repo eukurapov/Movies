@@ -16,8 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.backgroundColor = .systemBackground
-        window?.rootViewController = ViewController()
+        window?.backgroundColor = .movieDarkPurple
+        
+        let navigationController = UINavigationController(rootViewController: CollectionsViewController())
+        window?.rootViewController = navigationController
         
         return true
     }
