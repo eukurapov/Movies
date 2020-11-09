@@ -19,6 +19,7 @@ class CollectionsViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.allowsSelection = false
         return tableView
     }()
 
@@ -65,17 +66,35 @@ extension CollectionsViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return collections[section].movies.count
+        if section == 0 {
+            return 1
+        } else {
+            return collections[section].movies.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.textLabel?.text = collections[indexPath.section].movies[indexPath.row].name
-        cell.detailTextLabel?.text = collections[indexPath.section].movies[indexPath.row].subtitle
-        cell.textLabel?.textColor = .white
-        cell.detailTextLabel?.textColor = .white
-        cell.backgroundColor = .clear
+        let cell: UITableViewCell
+        if indexPath.section == 0 {
+            cell = CardsCollectionCell(movies: collections[indexPath.section].movies)
+        } else {
+            cell = UITableViewCell()
+            cell.textLabel?.text = collections[indexPath.section].movies[indexPath.row].name
+            cell.detailTextLabel?.text = collections[indexPath.section].movies[indexPath.row].subtitle
+            cell.textLabel?.textColor = .white
+            cell.detailTextLabel?.textColor = .white
+            cell.backgroundColor = .clear
+        }
+        cell.selectionStyle = .none
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return 300
+        } else {
+            return 44
+        }
     }
     
 }

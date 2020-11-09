@@ -22,3 +22,16 @@ extension UIColor {
     }
     
 }
+
+extension UILabel {
+    
+    static func withTextStyle(_ style: UIFont.TextStyle, text: String? = nil, numberOfLines: Int = 0) -> UILabel {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: style)
+        label.adjustsFontForContentSizeCategory = true
+        label.text = text
+        label.numberOfLines = numberOfLines
+        return label
+    }
+    
+}
