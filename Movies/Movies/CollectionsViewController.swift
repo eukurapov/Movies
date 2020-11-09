@@ -9,8 +9,12 @@ import UIKit
 
 class CollectionsViewController: UIViewController {
     
+    var collections: [Collection] {
+        MockData.collections
+    }
+    
     private lazy var collectionsView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.backgroundColor = .clear
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
@@ -46,14 +50,30 @@ class CollectionsViewController: UIViewController {
 
 extension CollectionsViewController: UITableViewDataSource, UITableViewDelegate {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return collections.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return collections[section].name
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let header = view as? UITableViewHeaderFooterView else { return }
+        header.textLabel?.textColor = UIColor.white
+        header.textLabel?.font = UIFont.preferredFont(forTextStyle: .title2)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return collections[section].movies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = "Movie \(indexPath.row+1)"
+        cell.textLabel?.text = collections[indexPath.section].movies[indexPath.row].name
+        cell.detailTextLabel?.text = collections[indexPath.section].movies[indexPath.row].subtitle
         cell.textLabel?.textColor = .white
+        cell.detailTextLabel?.textColor = .white
         cell.backgroundColor = .clear
         return cell
     }
