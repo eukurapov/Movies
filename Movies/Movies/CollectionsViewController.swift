@@ -13,14 +13,16 @@ class CollectionsViewController: UIViewController {
         MockData.collections
     }
     
-    private lazy var collectionsView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.backgroundColor = .clear
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.allowsSelection = false
-        return tableView
+    private lazy var collectionsView: UICollectionView = {
+        let collectionLayout = createLayout()
+        let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: collectionLayout)
+        collectionView.backgroundColor = .clear
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(MovieCardCell.self, forCellWithReuseIdentifier: MovieCardCell.identifier)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Row")
+        return collectionView
     }()
 
     override func viewDidLoad() {
@@ -49,53 +51,85 @@ class CollectionsViewController: UIViewController {
 
 }
 
-extension CollectionsViewController: UITableViewDataSource, UITableViewDelegate {
+extension CollectionsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return collections.count
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return collections[section].name
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return collections[section].movies.count
     }
     
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let header = view as? UITableViewHeaderFooterView else { return }
-        header.textLabel?.textColor = UIColor.white
-        header.textLabel?.font = UIFont.preferredFont(forTextStyle: .title2)
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        } else {
-            return collections[section].movies.count
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
-            cell = CardsCollectionCell(movies: collections[indexPath.section].movies)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCardCell.identifier, for: indexPath)
+            if let card = cell as? MovieCardCell {
+                card.movie = collections[indexPath.section].movies[indexPath.item]
+            }
+            return cell
         } else {
-            cell = UITableViewCell()
-            cell.textLabel?.text = collections[indexPath.section].movies[indexPath.row].name
-            cell.detailTextLabel?.text = collections[indexPath.section].movies[indexPath.row].subtitle
-            cell.textLabel?.textColor = .white
-            cell.detailTextLabel?.textColor = .white
-            cell.backgroundColor = .clear
-        }
-        cell.selectionStyle = .none
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 300
-        } else {
-            return 44
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Row", for: indexPath)
+            let name = collections[indexPath.section].movies[indexPath.item].name
+            let label = UILabel.withTextStyle(.headline, text: name)
+            label.textColor = .white
+            label.frame = cell.frame
+            cell.contentView.addSubview(label)
+            return cell
         }
     }
     
 }
 
+private extension CollectionsViewController {
+    
+    func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
+            layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+            
+            let section: NSCollectionLayoutSection
+            
+            switch sectionIndex {
+            case 0: section = self.horisontalCardsSection(layoutEnvironment: layoutEnvironment)
+            default: section = self.tableViewSection()
+            }
+            
+            return section
+        }
+        return layout
+    }
+    
+    func horisontalCardsSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                             heightDimension: .estimated(150))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupWidth = layoutEnvironment.container.contentSize.width * 0.8
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(groupWidth),
+                                               heightDimension: .estimated(150))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .groupPaging
+        let sectionSideInset = (layoutEnvironment.container.contentSize.width - groupWidth) / 2
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionSideInset, bottom: 0, trailing: sectionSideInset)
+        return section
+    }
+    
+    func tableViewSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                             heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+
+        let groupHeight = NSCollectionLayoutDimension.absolute(44)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: groupHeight)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+        return section
+    }
+    
+}

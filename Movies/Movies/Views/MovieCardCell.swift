@@ -1,5 +1,5 @@
 //
-//  MovieCardsCollectionCell.swift
+//  MovieCardCell.swift
 //  Movies
 //
 //  Created by Eugene Kurapov on 09.11.2020.
@@ -7,7 +7,9 @@
 
 import UIKit
 
-class MovieCardsCollectionCell: UICollectionViewCell {
+class MovieCardCell: UICollectionViewCell {
+    
+    static let identifier = "CardCell"
     
     var movie: Movie? {
         didSet {
@@ -54,31 +56,43 @@ class MovieCardsCollectionCell: UICollectionViewCell {
     }
     
     private func layout() {
-        addSubview(imageView)
-        addSubview(nameLabel)
-        addSubview(subtitleLabel)
-        addSubview(ratingLabel)
-        addSubview(activityIndicatior)
+        contentView.addSubview(imageView)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(subtitleLabel)
+        contentView.addSubview(ratingLabel)
+        contentView.addSubview(activityIndicatior)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         ratingLabel.translatesAutoresizingMaskIntoConstraints = false
         activityIndicatior.translatesAutoresizingMaskIntoConstraints = false
+        let contentViewBottonConstraint = contentView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        contentViewBottonConstraint.priority = .defaultHigh
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalToSystemSpacingBelow: topAnchor, multiplier: 1),
-            imageView.leadingAnchor.constraint(equalToSystemSpacingAfter: leadingAnchor, multiplier: 1),
-            trailingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1),
+            contentView.topAnchor.constraint(equalTo: topAnchor),
+            contentViewBottonConstraint,
+            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            imageView.topAnchor.constraint(equalToSystemSpacingBelow: contentView.topAnchor, multiplier: 1),
+            imageView.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 1),
+            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1),
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 9/16, constant: 0),
             
             imageView.bottomAnchor.constraint(equalToSystemSpacingBelow: subtitleLabel.bottomAnchor, multiplier: 1),
-            subtitleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: leadingAnchor, multiplier: 2),
-            trailingAnchor.constraint(equalToSystemSpacingAfter: subtitleLabel.trailingAnchor, multiplier: 2),
+            subtitleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 2),
+            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: subtitleLabel.trailingAnchor, multiplier: 2),
             
             nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: imageView.bottomAnchor, multiplier: 1),
-            nameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: leadingAnchor, multiplier: 1),
+            nameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 1),
+            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: nameLabel.trailingAnchor, multiplier: 1),
             
             ratingLabel.topAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
-            ratingLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: leadingAnchor, multiplier: 1),
+            ratingLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 1),
+            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: ratingLabel.trailingAnchor, multiplier: 1),
+            
+            contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: ratingLabel.bottomAnchor, multiplier: 1),
             
             activityIndicatior.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
             activityIndicatior.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
