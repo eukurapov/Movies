@@ -66,7 +66,14 @@ class MovieThumbnailCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        imageView.layer.cornerRadius = imageView.frame.height/2
+        addImageRoundedCorners()
+    }
+    
+    private func addImageRoundedCorners() {
+        let bezierPath = UIBezierPath(ovalIn: imageView.bounds)
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = bezierPath.cgPath
+        imageView.layer.mask = maskLayer
     }
     
     required init?(coder: NSCoder) {

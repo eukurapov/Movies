@@ -38,6 +38,7 @@ class MovieCardCell: UICollectionViewCell {
     private lazy var subtitleLabel = UILabel.withTextStyle(.caption1)
     private lazy var ratingLabel = UILabel.withTextStyle(.subheadline)
     private lazy var activityIndicatior = UIActivityIndicatorView()
+    private var shadowLayer: CAShapeLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -80,7 +81,7 @@ class MovieCardCell: UICollectionViewCell {
             contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1),
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 9/16, constant: 0),
             
-            imageView.bottomAnchor.constraint(equalToSystemSpacingBelow: subtitleLabel.bottomAnchor, multiplier: 1),
+            imageView.bottomAnchor.constraint(equalToSystemSpacingBelow: subtitleLabel.bottomAnchor, multiplier: 2),
             subtitleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 2),
             contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: subtitleLabel.trailingAnchor, multiplier: 2),
             
@@ -97,6 +98,37 @@ class MovieCardCell: UICollectionViewCell {
             activityIndicatior.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
             activityIndicatior.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
         ])
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        addImageRoundedCorners()
+        addShadowLayer()
+    }
+    
+    private func addImageRoundedCorners() {
+        let bezierPath = UIBezierPath(roundedRect: imageView.bounds, cornerRadius: 10)
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = bezierPath.cgPath
+        imageView.layer.mask = maskLayer
+    }
+    
+    private func addShadowLayer() {
+        if shadowLayer == nil {
+            shadowLayer = CAShapeLayer()
+            shadowLayer!.shadowColor = UIColor.black.cgColor
+            shadowLayer!.shadowOpacity = 1
+            imageView.layer.insertSublayer(shadowLayer!, at: 0)
+        }
+        let shadowSize = imageView.bounds.height / 2
+        guard shadowSize > 0 else { return }
+        let contactRect = CGRect(x: -shadowSize,
+                                 y: imageView.bounds.height - shadowSize/2,
+                                 width: imageView.bounds.width + shadowSize*2,
+                                 height: shadowSize)
+        shadowLayer!.shadowPath = UIBezierPath(rect: contactRect).cgPath
+        shadowLayer!.shadowRadius = shadowSize / 3
     }
     
     required init?(coder: NSCoder) {
