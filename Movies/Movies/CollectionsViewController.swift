@@ -21,7 +21,8 @@ class CollectionsViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(MovieCardCell.self, forCellWithReuseIdentifier: MovieCardCell.identifier)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Row")
+        collectionView.register(MovieListItemCell.self, forCellWithReuseIdentifier: MovieListItemCell.identifier)
+        collectionView.register(MovieThumbnailCell.self, forCellWithReuseIdentifier: MovieThumbnailCell.identifier)
         return collectionView
     }()
 
@@ -54,7 +55,7 @@ class CollectionsViewController: UIViewController {
 extension CollectionsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 3
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -68,13 +69,17 @@ extension CollectionsViewController: UICollectionViewDelegate, UICollectionViewD
                 card.movie = collections[indexPath.section].movies[indexPath.item]
             }
             return cell
+        } else if indexPath.section == 1 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieThumbnailCell.identifier, for: indexPath)
+            if let thumbnail = cell as? MovieThumbnailCell {
+                thumbnail.movie = collections[indexPath.section].movies[indexPath.item]
+            }
+            return cell
         } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Row", for: indexPath)
-            let name = collections[indexPath.section].movies[indexPath.item].name
-            let label = UILabel.withTextStyle(.headline, text: name)
-            label.textColor = .white
-            label.frame = cell.frame
-            cell.contentView.addSubview(label)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieListItemCell.identifier, for: indexPath)
+            if let listItem = cell as? MovieListItemCell {
+                listItem.movie = collections[indexPath.section].movies[indexPath.item]
+            }
             return cell
         }
     }
@@ -91,7 +96,8 @@ private extension CollectionsViewController {
             
             switch sectionIndex {
             case 0: section = self.horisontalCardsSection(layoutEnvironment: layoutEnvironment)
-            default: section = self.tableViewSection()
+            case 1: section = self.horisontalThumnailSection(layoutEnvironment: layoutEnvironment)
+            default: section = self.tableViewSection(layoutEnvironment: layoutEnvironment)
             }
             
             return section
@@ -104,31 +110,41 @@ private extension CollectionsViewController {
                                              heightDimension: .estimated(150))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-        let groupWidth = layoutEnvironment.container.contentSize.width * 0.8
+        let groupWidth = layoutEnvironment.container.contentSize.width * 0.85
         let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(groupWidth),
                                                heightDimension: .estimated(150))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
 
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
-        let sectionSideInset = (layoutEnvironment.container.contentSize.width - groupWidth) / 2
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionSideInset, bottom: 0, trailing: sectionSideInset)
+        section.interGroupSpacing = 10
         return section
     }
     
-    func tableViewSection() -> NSCollectionLayoutSection {
+    func horisontalThumnailSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                             heightDimension: .fractionalHeight(1.0))
+                                              heightDimension: .fractionalWidth(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
 
-        let groupHeight = NSCollectionLayoutDimension.absolute(44)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: groupHeight)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
+                                               heightDimension: .estimated(50))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
 
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+        section.orthogonalScrollingBehavior = .continuous
+        return section
+    }
+    
+    func tableViewSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                             heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(80))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
+
+        let section = NSCollectionLayoutSection(group: group)
         return section
     }
     
