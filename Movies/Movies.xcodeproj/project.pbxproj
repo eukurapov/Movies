@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		440DB31E255AE39000315032 /* MovieListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB31D255AE39000315032 /* MovieListItemCell.swift */; };
 		440DB322255AE86300315032 /* MovieThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB321255AE86300315032 /* MovieThumbnailCell.swift */; };
+		440DB325255AF05C00315032 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB324255AF05C00315032 /* SectionHeader.swift */; };
 		44AC6B56255950FB00D8651A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AC6B55255950FB00D8651A /* AppDelegate.swift */; };
 		44AC6B5A255950FB00D8651A /* CollectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AC6B59255950FB00D8651A /* CollectionsViewController.swift */; };
 		44AC6B5F255950FF00D8651A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44AC6B5E255950FF00D8651A /* Assets.xcassets */; };
@@ -24,6 +25,7 @@
 /* Begin PBXFileReference section */
 		440DB31D255AE39000315032 /* MovieListItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListItemCell.swift; sourceTree = "<group>"; };
 		440DB321255AE86300315032 /* MovieThumbnailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieThumbnailCell.swift; sourceTree = "<group>"; };
+		440DB324255AF05C00315032 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
 		44AC6B52255950FB00D8651A /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44AC6B55255950FB00D8651A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44AC6B59255950FB00D8651A /* CollectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionsViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				44AC6B8925598DBF00D8651A /* MovieCardCell.swift */,
 				440DB31D255AE39000315032 /* MovieListItemCell.swift */,
 				440DB321255AE86300315032 /* MovieThumbnailCell.swift */,
+				440DB324255AF05C00315032 /* SectionHeader.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -194,6 +197,7 @@
 				440DB322255AE86300315032 /* MovieThumbnailCell.swift in Sources */,
 				44AC6B8E2559918C00D8651A /* MovieService.swift in Sources */,
 				44AC6B7B2559740800D8651A /* Movie.swift in Sources */,
+				440DB325255AF05C00315032 /* SectionHeader.swift in Sources */,
 				44AC6B56255950FB00D8651A /* AppDelegate.swift in Sources */,
 				440DB31E255AE39000315032 /* MovieListItemCell.swift in Sources */,
 			);

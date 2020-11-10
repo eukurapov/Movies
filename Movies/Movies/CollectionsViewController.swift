@@ -23,6 +23,7 @@ class CollectionsViewController: UIViewController {
         collectionView.register(MovieCardCell.self, forCellWithReuseIdentifier: MovieCardCell.identifier)
         collectionView.register(MovieListItemCell.self, forCellWithReuseIdentifier: MovieListItemCell.identifier)
         collectionView.register(MovieThumbnailCell.self, forCellWithReuseIdentifier: MovieThumbnailCell.identifier)
+        collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: SectionHeader.kind, withReuseIdentifier: SectionHeader.identifier)
         return collectionView
     }()
 
@@ -84,6 +85,17 @@ extension CollectionsViewController: UICollectionViewDelegate, UICollectionViewD
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: SectionHeader.kind, withReuseIdentifier: SectionHeader.identifier, for: indexPath)
+        if let header = view as? SectionHeader {
+            header.text = collections[indexPath.section].name
+            if indexPath.section == 1 {
+                header.textStyle = .body
+            }
+        }
+        return view
+    }
+    
 }
 
 private extension CollectionsViewController {
@@ -99,7 +111,6 @@ private extension CollectionsViewController {
             case 1: section = self.horisontalThumnailSection(layoutEnvironment: layoutEnvironment)
             default: section = self.tableViewSection(layoutEnvironment: layoutEnvironment)
             }
-            
             return section
         }
         return layout
@@ -118,6 +129,7 @@ private extension CollectionsViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
         section.interGroupSpacing = 10
+        
         return section
     }
     
@@ -132,6 +144,15 @@ private extension CollectionsViewController {
 
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
+        
+        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .estimated(20))
+        let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: titleSize,
+            elementKind: SectionHeader.kind,
+            alignment: .top)
+        section.boundarySupplementaryItems = [titleSupplementary]
+        
         return section
     }
     
@@ -145,6 +166,15 @@ private extension CollectionsViewController {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
 
         let section = NSCollectionLayoutSection(group: group)
+        
+        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .estimated(20))
+        let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: titleSize,
+            elementKind: SectionHeader.kind,
+            alignment: .top)
+        section.boundarySupplementaryItems = [titleSupplementary]
+        
         return section
     }
     
