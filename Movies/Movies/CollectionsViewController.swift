@@ -53,7 +53,19 @@ class CollectionsViewController: UIViewController {
 
 }
 
-extension CollectionsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension CollectionsViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = collections[indexPath.section].movies[indexPath.row]
+        let vc = DetailsViewController()
+        vc.movie = movie
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
+    }
+    
+}
+
+extension CollectionsViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 3
