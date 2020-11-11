@@ -18,7 +18,7 @@ class MovieCardCell: UICollectionViewCell {
                 activityIndicatior.startAnimating()
                 nameLabel.text = movie.name
                 subtitleLabel.text = movie.subtitle
-                ratingLabel.text = String(repeating: "★", count: Int(5*movie.rate/10))
+                updateRatingMaskLayer()
                 MovieService.shared.fetchImageFrom(path: movie.imagePath) { [weak self] result in
                     self?.activityIndicatior.stopAnimating()
                     switch result {
@@ -52,6 +52,7 @@ class MovieCardCell: UICollectionViewCell {
         nameLabel.textColor = .white
         subtitleLabel.textColor = .white
         ratingLabel.textColor = .white
+        ratingLabel.text = "★★★★★"
         activityIndicatior.color = .moviePurple
         backgroundColor = .clear
     }
@@ -133,6 +134,16 @@ class MovieCardCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func updateRatingMaskLayer() {
+        let maskLayer = CAShapeLayer()
+        let textRect = ratingLabel.textRect(forBounds: bounds, limitedToNumberOfLines: 1)
+        let maskRect = CGRect(x: 0, y: 0,
+                              width: textRect.width * CGFloat((movie?.rate ?? 0)/10),
+                              height: textRect.height)
+        maskLayer.path = UIBezierPath(rect: maskRect).cgPath
+        ratingLabel.layer.mask = maskLayer
     }
     
 }
