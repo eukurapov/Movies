@@ -38,12 +38,11 @@ class ZoomInAnimationController: NSObject, UIViewControllerAnimatedTransitioning
         containerView.addSubview(targetView)
         containerView.bringSubviewToFront(targetView)
         
-        UIView.animateKeyframes(withDuration: duration, delay: 0, options: []) {
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: .calculationModeCubicPaced) {
             
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.7) {
-                let scaleTransform = CGAffineTransform(scaleX: 0.7*(1-xScale)+xScale, y: 0.7*(1-yScale)+yScale)
-                targetView.center = finalCenter.applying(scaleTransform)
-                targetView.transform = scaleTransform
+                targetView.center = finalCenter
+                targetView.transform = .identity
             }
             
             UIView.addKeyframe(withRelativeStartTime: 0.3, relativeDuration: 0.5) {
@@ -51,8 +50,6 @@ class ZoomInAnimationController: NSObject, UIViewControllerAnimatedTransitioning
             }
             
             UIView.addKeyframe(withRelativeStartTime: 0.7, relativeDuration: 0.3) {
-                targetView.center = finalCenter
-                targetView.transform = .identity
                 targetView.layer.cornerRadius = 0
             }
             
