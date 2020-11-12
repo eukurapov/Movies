@@ -124,14 +124,14 @@ class DetailsViewController: UIViewController {
             if scale < 0.85 {
                 dismiss(animated: true)
             }
-            wrapper.transform = CGAffineTransform(scaleX: scale, y: scale)
+            view.transform = CGAffineTransform(scaleX: scale, y: scale)
             wrapper.layer.cornerRadius = (1-scale/2)*20
         case .ended, .cancelled:
             if scale < 0.85 {
                 dismiss(animated: true)
             } else {
                 UIView.animate(withDuration: 0.25) {
-                    self.wrapper.transform = .identity
+                    self.view.transform = .identity
                     self.wrapper.layer.cornerRadius = 0
                 }
             }

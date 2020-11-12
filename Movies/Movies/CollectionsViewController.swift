@@ -27,6 +27,8 @@ class CollectionsViewController: UIViewController {
         return collectionView
     }()
 
+    private var animationController = ZoomInAnimationController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -211,10 +213,22 @@ extension CollectionsViewController: UIViewControllerTransitioningDelegate {
         default: return nil
         }
         
-        let animationController = ZoomInAnimationController()
         animationController.originFrame = view.convert(cellImageView.frame, to: nil)
-        animationController.destinationFrame = details.view.convert(details.imageView.frame, to: nil)
+        animationController.transitionFrame = details.view.convert(details.imageView.frame, to: nil)
         
+        animationController.presenting = true
+        view.contentView.alpha = 0
+        return animationController
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        animationController.presenting = false
+        guard let indexPath = collectionsView.indexPathsForSelectedItems?[0],
+              let view = collectionsView.cellForItem(at: indexPath)
+        else { return nil }
+        animationController.onDismiss = {
+            view.contentView.alpha = 1
+        }
         return animationController
     }
     
