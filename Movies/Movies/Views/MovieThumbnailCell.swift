@@ -30,7 +30,7 @@ class MovieThumbnailCell: UICollectionViewCell {
         }
     }
     
-    private lazy var imageView = UIImageView()
+    lazy var imageView = UIImageView()
     private lazy var activityIndicatior = UIActivityIndicatorView()
     
     override init(frame: CGRect) {

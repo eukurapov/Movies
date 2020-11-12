@@ -32,7 +32,7 @@ class MovieListItemCell: UICollectionViewCell {
         }
     }
     
-    private lazy var imageView = UIImageView()
+    lazy var imageView = UIImageView()
     private lazy var nameLabel = UILabel.withTextStyle(.subheadline)
     private lazy var ratingLabel = UILabel.withTextStyle(.footnote)
     private lazy var activityIndicatior = UIActivityIndicatorView()
@@ -46,8 +46,8 @@ class MovieListItemCell: UICollectionViewCell {
     
     private func style() {
         imageView.contentMode = .scaleAspectFill
-        nameLabel.textColor = .white
-        ratingLabel.textColor = .white
+        nameLabel.textColor = .movieText
+        ratingLabel.textColor = .movieText
         ratingLabel.text = "★★★★★"
         activityIndicatior.color = .moviePurple
         backgroundColor = .clear

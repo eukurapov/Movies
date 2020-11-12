@@ -33,8 +33,8 @@ class CollectionsViewController: UIViewController {
         title = "Mövies"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.movieText]
+        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.movieText]
         
         view.backgroundColor = .movieDarkPurple
         
@@ -59,7 +59,9 @@ extension CollectionsViewController: UICollectionViewDelegate {
         let movie = collections[indexPath.section].movies[indexPath.row]
         let vc = DetailsViewController()
         vc.movie = movie
+        vc.view.layoutIfNeeded()
         vc.modalPresentationStyle = .fullScreen
+        vc.transitioningDelegate = self
         present(vc, animated: true)
     }
     
@@ -188,6 +190,32 @@ private extension CollectionsViewController {
         section.boundarySupplementaryItems = [titleSupplementary]
         
         return section
+    }
+    
+}
+
+extension CollectionsViewController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let indexPath = collectionsView.indexPathsForSelectedItems?[0],
+              let view = collectionsView.cellForItem(at: indexPath)
+        else { return nil }
+        
+        guard let details = presented as? DetailsViewController else { return nil }
+        
+        let cellImageView: UIImageView
+        switch view {
+        case let item as MovieListItemCell: cellImageView = item.imageView
+        case let card as MovieCardCell: cellImageView = card.imageView
+        case let thumnail as MovieThumbnailCell: cellImageView = thumnail.imageView
+        default: return nil
+        }
+        
+        let animationController = ZoomInAnimationController()
+        animationController.originFrame = view.convert(cellImageView.frame, to: nil)
+        animationController.destinationFrame = details.view.convert(details.imageView.frame, to: nil)
+        
+        return animationController
     }
     
 }

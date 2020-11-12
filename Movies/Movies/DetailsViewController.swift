@@ -15,7 +15,6 @@ class DetailsViewController: UIViewController {
             if let movie = movie {
                 activityIndicatior.startAnimating()
                 nameLabel.text = movie.name
-                subtitleLabel.text = movie.subtitle
                 descriptionLabel.text = movie.description
                 updateRatingMaskLayer()
                 MovieService.shared.fetchImageFrom(path: movie.imagePath) { [weak self] result in
@@ -33,9 +32,8 @@ class DetailsViewController: UIViewController {
     }
     
     private var wrapper = UIView()
-    private lazy var imageView = UIImageView()
+    lazy var imageView = UIImageView()
     private lazy var nameLabel = UILabel.withTextStyle(.headline)
-    private lazy var subtitleLabel = UILabel.withTextStyle(.caption1)
     private lazy var ratingLabel = UILabel.withTextStyle(.subheadline)
     private lazy var descriptionLabel = UILabel.withTextStyle(.body)
     private lazy var activityIndicatior = UIActivityIndicatorView()
@@ -52,12 +50,12 @@ class DetailsViewController: UIViewController {
     }
     
     private func style() {
+        wrapper.layer.masksToBounds = true
         view.backgroundColor = .movieDarkPurple
         imageView.contentMode = .scaleAspectFill
-        nameLabel.textColor = .white
-        subtitleLabel.textColor = .white
-        descriptionLabel.textColor = .white
-        ratingLabel.textColor = .white
+        nameLabel.textColor = .movieText
+        descriptionLabel.textColor = .movieText
+        ratingLabel.textColor = .movieText
         ratingLabel.text = "★★★★★"
         activityIndicatior.color = .moviePurple
     }
@@ -66,26 +64,20 @@ class DetailsViewController: UIViewController {
         view.addSubview(wrapper)
         wrapper.addSubview(imageView)
         wrapper.addSubview(nameLabel)
-        wrapper.addSubview(subtitleLabel)
         wrapper.addSubview(descriptionLabel)
         wrapper.addSubview(ratingLabel)
         wrapper.addSubview(activityIndicatior)
         wrapper.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         ratingLabel.translatesAutoresizingMaskIntoConstraints = false
         activityIndicatior.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalToSystemSpacingBelow: wrapper.topAnchor, multiplier: 1),
-            imageView.leadingAnchor.constraint(equalToSystemSpacingAfter: wrapper.leadingAnchor, multiplier: 1),
-            wrapper.trailingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1),
+            imageView.topAnchor.constraint(equalTo: wrapper.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor),
+            wrapper.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 9/16, constant: 0),
-            
-            imageView.bottomAnchor.constraint(equalToSystemSpacingBelow: subtitleLabel.bottomAnchor, multiplier: 2),
-            subtitleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: wrapper.leadingAnchor, multiplier: 2),
-            wrapper.trailingAnchor.constraint(equalToSystemSpacingAfter: subtitleLabel.trailingAnchor, multiplier: 2),
             
             nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: imageView.bottomAnchor, multiplier: 1),
             nameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: wrapper.leadingAnchor, multiplier: 1),
@@ -102,10 +94,10 @@ class DetailsViewController: UIViewController {
             activityIndicatior.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
             activityIndicatior.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
             
-            wrapper.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            wrapper.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor),
-            view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor),
+            wrapper.topAnchor.constraint(equalTo: view.topAnchor),
+            wrapper.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor),
+            view.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor),
         ])
     }
     
@@ -133,12 +125,14 @@ class DetailsViewController: UIViewController {
                 dismiss(animated: true)
             }
             wrapper.transform = CGAffineTransform(scaleX: scale, y: scale)
+            wrapper.layer.cornerRadius = (1-scale/2)*20
         case .ended, .cancelled:
             if scale < 0.85 {
                 dismiss(animated: true)
             } else {
                 UIView.animate(withDuration: 0.25) {
                     self.wrapper.transform = .identity
+                    self.wrapper.layer.cornerRadius = 0
                 }
             }
         default: break

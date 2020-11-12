@@ -9,6 +9,10 @@ import UIKit
 
 extension UIColor {
     
+    static var movieText: UIColor {
+        return .white
+    }
+    
     static var movieDarkPurple: UIColor {
         return UIColor(red: 26/255, green: 8/255, blue: 44/255, alpha: 1)
     }

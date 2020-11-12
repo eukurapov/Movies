@@ -37,7 +37,7 @@ class SectionHeader: UICollectionReusableView {
     
     private func style() {
         backgroundColor = .clear
-        label.textColor = .white
+        label.textColor = .movieText
     }
     
     private func layout() {
