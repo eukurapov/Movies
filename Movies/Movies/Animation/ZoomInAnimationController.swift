@@ -38,21 +38,21 @@ class ZoomInAnimationController: NSObject, UIViewControllerAnimatedTransitioning
         containerView.addSubview(targetView)
         containerView.bringSubviewToFront(targetView)
         
-        UIView.animateKeyframes(withDuration: duration, delay: 0, options: .calculationModeCubicPaced) {
-            
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.7) {
-                targetView.center = finalCenter
-                targetView.transform = .identity
-            }
-            
-            UIView.addKeyframe(withRelativeStartTime: 0.3, relativeDuration: 0.5) {
-                targetView.bounds = finalBounds
-            }
-            
-            UIView.addKeyframe(withRelativeStartTime: 0.7, relativeDuration: 0.3) {
-                targetView.layer.cornerRadius = 0
-            }
-            
+        UIView.animate(withDuration: 0.7 * duration) {
+            targetView.center = finalCenter
+            targetView.transform = .identity
+        }
+        
+        UIView.animate(withDuration: 0.7 * duration,
+                       delay: 0.3 * duration,
+                       usingSpringWithDamping: 0.7,
+                       initialSpringVelocity: 6/xScale,
+                       options: .beginFromCurrentState) {
+            targetView.bounds = finalBounds
+        }
+        
+        UIView.animate(withDuration: 0.3 * duration, delay: 0.7 * duration, options: .beginFromCurrentState) {
+            targetView.layer.cornerRadius = 0
         } completion: { _ in
             transitionContext.completeTransition(true)
         }
