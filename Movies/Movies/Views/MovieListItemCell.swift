@@ -24,7 +24,7 @@ class MovieListItemCell: UICollectionViewCell {
                     case .success(let image):
                         self?.imageView.image = image
                     case .failure(let error):
-                        self?.imageView.image = UIImage(named: "film.fill")
+                        self?.imageView.image = UIImage(systemName: "film.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
                         print(error)
                     }
                 }
