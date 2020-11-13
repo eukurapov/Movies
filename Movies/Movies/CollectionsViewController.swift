@@ -40,14 +40,15 @@ class CollectionsViewController: UIViewController {
         view.backgroundColor = .movieDarkPurple
         
         MovieService.shared.fetchCellections() { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let newCollection):
-                self?.collections = newCollection
-                self?.collectionsView.reloadData()
+                self.collections = newCollection
             case .failure(let error):
-                self?.collections = MockData.collections
                 print(error)
             }
+            if self.collections.isEmpty { self.collections = MockData.collections }
+            self.collectionsView.reloadData()
         }
         
         layout()
