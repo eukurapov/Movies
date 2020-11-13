@@ -19,6 +19,7 @@ class MovieService {
     static let shared = MovieService()
 
     private let collectionsPath = "https://ctx.playfamily.ru/screenapi/v1/noauth/mainpage/web/1?sid=2dyoA3AOfKedLVmD0Aui6Q"
+    //private let collectionsPath = "https://eukurapov.github.io/response.json"
     
     func fetchImageFrom(path: String, completion: @escaping (Result<UIImage,Error>) -> Void) {
         guard let url = URL(string: path) else { completion(Result.failure(MovieServiceError.badRequest)); return }
