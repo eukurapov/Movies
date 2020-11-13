@@ -9,6 +9,8 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     
+    override var prefersStatusBarHidden: Bool { return true }
+    
     var movie: Movie? {
         didSet {
             imageView.image = nil
@@ -50,6 +52,7 @@ class DetailsViewController: UIViewController {
     }
     
     private func style() {
+        modalPresentationCapturesStatusBarAppearance = true
         wrapper.layer.masksToBounds = true
         wrapper.backgroundColor = .movieDarkPurple
         view.backgroundColor = .clear

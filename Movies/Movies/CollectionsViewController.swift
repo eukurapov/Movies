@@ -37,6 +37,7 @@ class CollectionsViewController: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.movieText]
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.movieText]
+        navigationController?.navigationBar.barStyle = .black
         
         view.backgroundColor = .movieDarkPurple
         
