@@ -39,7 +39,7 @@ class CollectionsViewController: UIViewController {
         
         view.backgroundColor = .movieDarkPurple
         
-        MovieService.shared.fetchCellections() { [weak self] result in
+        MovieService.shared.fetchCollections() { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let newCollection):
