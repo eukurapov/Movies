@@ -16,7 +16,9 @@ class MovieThumbnailCell: UICollectionViewCell {
             imageView.image = nil
             if let movie = movie {
                 activityIndicatior.startAnimating()
-                MovieService.shared.fetchImageFrom(path: movie.imagePath) { [weak self] result in
+                let path = movie.imagePath
+                MovieService.shared.fetchImageFrom(path: path) { [weak self, path] result in
+                    guard path == self?.movie?.imagePath else { return }
                     self?.activityIndicatior.stopAnimating()
                     switch result {
                     case .success(let image):
