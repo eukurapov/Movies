@@ -25,6 +25,10 @@ extension UIColor {
         return UIColor(red: 129/255, green: 91/255, blue: 210/255, alpha: 1)
     }
     
+    static var movieDarkPurpleSemiTransparent: UIColor {
+        return UIColor(red: 71/255, green: 5/255, blue: 102/255, alpha: 0.5)
+    }
+    
 }
 
 extension UILabel {

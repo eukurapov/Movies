@@ -62,7 +62,7 @@ extension CollectionsViewController: UICollectionViewDelegate {
         let vc = DetailsViewController()
         vc.movie = movie
         vc.view.layoutIfNeeded()
-        vc.modalPresentationStyle = .fullScreen
+        vc.modalPresentationStyle = .overFullScreen
         vc.transitioningDelegate = self
         present(vc, animated: true)
     }
@@ -209,7 +209,6 @@ extension CollectionsViewController: UIViewControllerTransitioningDelegate {
         switch view {
         case let item as MovieListItemCell: cellImageView = item.imageView
         case let card as MovieCardCell: cellImageView = card.imageView
-        case let thumnail as MovieThumbnailCell: cellImageView = thumnail.imageView
         default: return nil
         }
         
@@ -222,13 +221,14 @@ extension CollectionsViewController: UIViewControllerTransitioningDelegate {
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        animationController.presenting = false
         guard let indexPath = collectionsView.indexPathsForSelectedItems?[0],
               let view = collectionsView.cellForItem(at: indexPath)
         else { return nil }
+        guard !(view is MovieThumbnailCell) else { return nil }
         animationController.onDismiss = {
             view.contentView.alpha = 1
         }
+        animationController.presenting = false
         return animationController
     }
     

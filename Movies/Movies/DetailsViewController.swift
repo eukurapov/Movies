@@ -51,7 +51,8 @@ class DetailsViewController: UIViewController {
     
     private func style() {
         wrapper.layer.masksToBounds = true
-        view.backgroundColor = .movieDarkPurple
+        wrapper.backgroundColor = .movieDarkPurple
+        view.backgroundColor = .clear
         imageView.contentMode = .scaleAspectFill
         nameLabel.textColor = .movieText
         descriptionLabel.textColor = .movieText
