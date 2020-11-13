@@ -14,9 +14,9 @@ struct Movie {
     var description: String
     var imagePath: String
     var rate: Double
-    var actors: [String]
-    var tags: [String]
-    var year: Int
-    var genres: [String]
+//    var actors: [String]
+//    var tags: [String]
+//    var year: Int
+//    var genres: [String]
     
 }

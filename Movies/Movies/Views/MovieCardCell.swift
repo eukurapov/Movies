@@ -140,7 +140,7 @@ class MovieCardCell: UICollectionViewCell {
         let maskLayer = CAShapeLayer()
         let textRect = ratingLabel.textRect(forBounds: bounds, limitedToNumberOfLines: 1)
         let maskRect = CGRect(x: 0, y: 0,
-                              width: textRect.width * CGFloat((movie?.rate ?? 0)/10),
+                              width: textRect.width * CGFloat((movie?.rate ?? 0)/5),
                               height: textRect.height)
         maskLayer.path = UIBezierPath(rect: maskRect).cgPath
         ratingLabel.layer.mask = maskLayer

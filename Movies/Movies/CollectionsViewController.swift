@@ -9,9 +9,7 @@ import UIKit
 
 class CollectionsViewController: UIViewController {
     
-    var collections: [Collection] {
-        MockData.collections
-    }
+    var collections = [Collection]()
     
     private lazy var collectionsView: UICollectionView = {
         let collectionLayout = createLayout()
@@ -40,6 +38,17 @@ class CollectionsViewController: UIViewController {
         navigationController?.navigationBar.barStyle = .black
         
         view.backgroundColor = .movieDarkPurple
+        
+        MovieService.shared.fetchCellections() { [weak self] result in
+            switch result {
+            case .success(let newCollection):
+                self?.collections = newCollection
+                self?.collectionsView.reloadData()
+            case .failure(let error):
+                self?.collections = MockData.collections
+                print(error)
+            }
+        }
         
         layout()
     }
@@ -72,8 +81,12 @@ extension CollectionsViewController: UICollectionViewDelegate {
 
 extension CollectionsViewController: UICollectionViewDataSource {
     
+    private func cellTypeIndexForSection(_ sectionIndex: Int) -> Int {
+        return sectionIndex % 3
+    }
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return collections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -81,13 +94,14 @@ extension CollectionsViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
+        let cellTypeIndex = cellTypeIndexForSection(indexPath.section)
+        if cellTypeIndex == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCardCell.identifier, for: indexPath)
             if let card = cell as? MovieCardCell {
                 card.movie = collections[indexPath.section].movies[indexPath.item]
             }
             return cell
-        } else if indexPath.section == 1 {
+        } else if cellTypeIndex == 1 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieThumbnailCell.identifier, for: indexPath)
             if let thumbnail = cell as? MovieThumbnailCell {
                 thumbnail.movie = collections[indexPath.section].movies[indexPath.item]
@@ -106,7 +120,7 @@ extension CollectionsViewController: UICollectionViewDataSource {
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: SectionHeader.kind, withReuseIdentifier: SectionHeader.identifier, for: indexPath)
         if let header = view as? SectionHeader {
             header.text = collections[indexPath.section].name
-            if indexPath.section == 1 {
+            if cellTypeIndexForSection(indexPath.section) == 1 {
                 header.textStyle = .body
             }
         }
@@ -123,7 +137,7 @@ private extension CollectionsViewController {
             
             let section: NSCollectionLayoutSection
             
-            switch sectionIndex {
+            switch self.cellTypeIndexForSection(sectionIndex) {
             case 0: section = self.horisontalCardsSection(layoutEnvironment: layoutEnvironment)
             case 1: section = self.horisontalThumnailSection(layoutEnvironment: layoutEnvironment)
             default: section = self.tableViewSection(layoutEnvironment: layoutEnvironment)
